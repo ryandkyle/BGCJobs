@@ -1,0 +1,45 @@
+﻿@{  
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Apply for a Job at Teen Jobs";
+
+    if(IsPost)
+    {
+        string Name = Request["inputName"];
+        string Address = Request["inputAddress"];
+        string CityStateZip = Request["inputCityStateZip"];
+        var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip) VALUES (@0, @1, @2)"; 
+        var db = Database.Open("StarterSite"); 
+        Response.Write(Name);
+        Response.Write(Address);
+        Response.Write(CityStateZip);
+        Response.Write(SQLINSERT);
+        db.Execute(SQLINSERT, Name, Address, CityStateZip);
+        Response.Redirect("Jobs.cshtml");
+    }
+
+    //var db = Database.Open("StarterSite");
+    //var sqlQ = "Select * FROM Jobs WHERE @JobTitle = " + JobTitle;
+    //var data = db.Query(sqlQ);
+}
+<p>
+    Submit an application to Teen Jobs.
+</p>
+<form action="" method="post">
+    <p>Name: <input type="text" name="inputName" /></p>
+    <p>Address: <input type="text" name="inputAddress" /></p>
+    <p>City State Zip: <input type="text" name="inputCityStateZip" /></p>
+    <p>Home Phone: <input type="text" name="inputHomePhone" /></p>
+    <p>Cell Phone: <input type="text" name="inputCellPhone" /></p>
+    <p>Email: <input type="text" name="inputEmail" /></p>
+    <p>Age: <input type="text" name="inputAge" /></p>
+    <p>School: <input type="text" name="inputSchool" /></p>
+    <p>Current Grade: <input type="text" name="inputCurrentGrade" /></p>
+    <p>HS Graduation Year: <input type="text" name="inputHSGraduationYear" /></p>
+    <!-- The following is meant to be a multiline textbox -->
+    <p>How did you hear about YouthForce? <input type="text" name="inputHearAboutUs" style="height:60px" /></p>
+    <p>Are you currently a Boys &amp; Girls Club of King County Member? <input type="checkbox" name="inputBGCKingCoMemeber" /></p>
+    <!-- The "which clubs" field's visibility is dependent on  BGCKingCoMemeber input. --> 
+    <p>Which Club: <input type="text" name="inputWhichClub" /></p>
+    
+    <p><input type="submit" value="Add Job" /></p>
+</form>

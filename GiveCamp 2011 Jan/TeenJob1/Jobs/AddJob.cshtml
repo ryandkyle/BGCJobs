@@ -1,0 +1,23 @@
+﻿@{  
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Welcome to Teen Jobs";
+
+        var JobTitle = "";
+        if(IsPost)
+        {
+            JobTitle = Request["formJobTitle"];
+            var SQLINSERT = "INSERT INTO Jobs (JobTitle) VALUES (@0)"; 
+            var db = Database.Open("StarterSite"); 
+            Response.Write(JobTitle);
+            Response.Write(SQLINSERT);
+            db.Execute(SQLINSERT, JobTitle);
+            Response.Redirect("Jobs.cshtml");
+        }
+}
+<p>
+    Add a job to the database.
+</p>
+<form action="" method="post">
+    <p>Job Title: <input type="text" name="formJobTitle" /></p>
+    <p><input type="submit" value="Add Job" /></p>
+</form>

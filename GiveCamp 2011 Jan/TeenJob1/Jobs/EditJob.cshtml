@@ -1,0 +1,24 @@
+﻿@{  
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Welcome to Teen Jobs";
+
+        var id = Request["id"];
+        var SQLSELECT = "SELECT JobTitle FROM Jobs where JobID=@0"; 
+        var db = Database.Open("StarterSite");   
+        var Jobs = db.QuerySingle(SQLSELECT,id);
+        var jobTitle = Jobs.JobTitle;
+        if(IsPost)
+        {
+            jobTitle = Request["formJobTitle"];
+            var SQLUPDATE = "UPDATE Jobs SET JobTitle=@0 WHERE JobID=@1";  
+            db.Execute(SQLUPDATE, jobTitle, id);
+            Response.Redirect("Jobs.cshtml");
+        }
+}
+<p>
+    Add a job to the database.
+</p>
+<form action="" method="post">
+    <p>Job Title: <input type="text" name="formJobTitle" value="@jobTitle" /></p>
+    <p><input type="submit" value="Edit Job" /></p>
+</form>

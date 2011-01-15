@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Teen Job Site - @Page.Title</title>
+        <link href="@Href("~/Styles/Site.css")" rel="stylesheet" />
+        <link href="@Href("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
+    </head>
+    <body>
+        <div id="page">
+            <div id="header">
+                <p class="site-title">Teen Job Site</p>
+                <div id="login">
+                    @if (WebSecurity.IsAuthenticated)
+                    {
+                        <p>
+                            Welcome <a href="@Href("~/Account/ChangePassword")" title="Change password">@WebSecurity.CurrentUserName</a>!
+                            <a href="@Href("~/Account/Logout")">Logout</a>
+                        </p>
+                    }
+                    else
+                    {
+                        <ul>
+                            <li><a href="@Href("~/Account/Register")">Register</a></li>
+                            <li><a href="@Href("~/Account/Login")">Login</a></li>
+                        </ul>
+                    }
+                </div>
+                
+                <ul id="menu">
+                    <li><a href="@Href("~/")">Home</a></li>
+                    <li><a href="@Href("~/Jobs/Jobs.cshtml")">Jobs</a></li>
+                    <li><a href="@Href("~/Apply")">Apply</a></li>
+                    <li><a href="@Href("~/About")">About</a></li>
+                </ul>
+            </div>
+            <div id="main">
+                <img src="@Href("~/Images/teenjobs.jpg")" />
+                <div id="content">
+                    <h1>@Page.Title</h1>
+                    @RenderBody()
+                </div>
+                <div id="footer">
+                    &copy; @DateTime.Now.Year - Teen Jobs
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

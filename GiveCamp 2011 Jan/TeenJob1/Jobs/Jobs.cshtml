@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "About TeenJob.org";
+    
+    var db=Database.Open("StarterSite");
+    var sqlQ = "Select * FROM Jobs";
+    var data = db.Query(sqlQ);
+}
+<p>
+    These jobs are available.
+</p>
+<div>
+    <ul>
+        @foreach(var row in data)
+        {
+            <li><a href="#">@row.JobTitle</a></li>
+        }
+    </ul>
+    <a href="AddJob.cshtml">Add Job</a>
+</div>
+<p>Edit Jobs
+     <ul>
+        @foreach(var row in data)
+        {
+            <li><a href="EditJob.cshtml?id=@row.JobID">@row.JobTitle</a></li>
+        }
+    </ul>   
+    
+</p>
