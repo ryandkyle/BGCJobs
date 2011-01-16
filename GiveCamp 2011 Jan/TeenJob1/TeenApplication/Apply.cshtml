@@ -1,6 +1,7 @@
 ﻿@{  
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Apply for a Job at Teen Jobs";
+        var db = Database.Open("StarterSite"); 
 
     if(IsPost)
     {
@@ -8,7 +9,6 @@
         string Address = Request["inputAddress"];
         string CityStateZip = Request["inputCityStateZip"];
         var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip) VALUES (@0, @1, @2)"; 
-        var db = Database.Open("StarterSite"); 
         Response.Write(Name);
         Response.Write(Address);
         Response.Write(CityStateZip);
@@ -16,6 +16,10 @@
         db.Execute(SQLINSERT, Name, Address, CityStateZip);
         Response.Redirect("Jobs.cshtml");
     }
+    
+    var selectClubs = "SELECT * FROM Clubs ORDER BY ClubName";
+    var clubdata = db.Query(selectClubs);
+
 
     //var db = Database.Open("StarterSite");
     //var sqlQ = "Select * FROM Jobs WHERE @JobTitle = " + JobTitle;
@@ -26,21 +30,31 @@
     Submit an application to Teen Jobs.
 </p>
 <form action="" method="post">
-    <p>Name: <input type="text" name="inputName" /></p>
-    <p>Address: <input type="text" name="inputAddress" /></p>
-    <p>City State Zip: <input type="text" name="inputCityStateZip" /></p>
-    <p>Home Phone: <input type="text" name="inputHomePhone" /></p>
-    <p>Cell Phone: <input type="text" name="inputCellPhone" /></p>
-    <p>Email: <input type="text" name="inputEmail" /></p>
-    <p>Age: <input type="text" name="inputAge" /></p>
-    <p>School: <input type="text" name="inputSchool" /></p>
-    <p>Current Grade: <input type="text" name="inputCurrentGrade" /></p>
-    <p>HS Graduation Year: <input type="text" name="inputHSGraduationYear" /></p>
-    <!-- The following is meant to be a multiline textbox -->
-    <p>How did you hear about YouthForce? <input type="text" name="inputHearAboutUs" style="height:60px" /></p>
-    <p>Are you currently a Boys &amp; Girls Club of King County Member? <input type="checkbox" name="inputBGCKingCoMemeber" /></p>
+    <p>
+        <table width="200px" class="formtable">
+    <tr><td>Name</td><td><input type="text" name="inputName" class="forminput" /></td></tr>
+    <tr><td>Address</td><td><input type="text" name="inputAddress" class="forminput" /></td></tr>
+    <tr><td>City State Zip</td><td><input type="text" name="inputCityStateZip" class="forminput" /></td></tr>
+    <tr><td>Home Phone</td><td><input type="text" name="inputHomePhone" class="forminput" /></td></tr>
+    <tr><td>Cell Phone</td><td><input type="text" name="inputCellPhone" class="forminput" /></td></tr>
+    <tr><td>Email</td><td><input type="text" name="inputEmail" class="forminput" /></td></tr>
+    <tr><td>Age</td><td><input type="text" name="inputAge" class="forminput" /></td></tr>
+    <tr><td>School</td><td><input type="text" name="inputSchool" class="forminput" /></td></tr>
+    <tr><td>Current Grade</td><td><input type="text" name="inputCurrentGrade" class="forminput" /></td></tr>
+    <tr><td>HS Graduation Year</td><td><input type="text" name="inputHSGraduationYear" class="forminput" /></td></tr>
+    <tr><td width="180px">Are you currently a Boys &amp; Girls Club of King County Member?</td><td><input type="checkbox" name="inputBGCKingCoMemeber" /></td></tr>
     <!-- The "which clubs" field's visibility is dependent on  BGCKingCoMemeber input. --> 
-    <p>Which Club: <input type="text" name="inputWhichClub" /></p>
+    <tr><td>Which Club</td><td><select name="whichclub" class="forminput">
+        @foreach(var club in clubdata)
+        {
+            <option value="@club.ClubId">@club.ClubName</option>
+        }
+    </select></td></tr>
+    <!-- The following is meant to be a multiline textbox -->
+    <tr><td colspan="2">How did you hear about YouthForce?<br />
+        <textarea rows="6" cols="40" name="inputHearAboutUs" class="forminput"></textarea></td></tr>
     
-    <p><input type="submit" value="Add Job" /></p>
+    <tr><td colspan="2"><input type="submit" value="Add Job" /></td></tr>
+        </table>
+    </p>
 </form>
