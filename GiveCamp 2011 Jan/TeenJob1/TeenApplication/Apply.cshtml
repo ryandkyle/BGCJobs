@@ -1,9 +1,15 @@
-<<<<<<< HEAD
-﻿@{  
+@{  
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Apply for a Job at Teen Jobs";
         var db = Database.Open("StarterSite"); 
 
+    var selectCareers = "SELECT * FROM CareerInterest ORDER BY CareerName";
+    var careerVar = db.Query(selectCareers);
+    List<string> careers = new List<string>();
+    foreach (var career in careerVar) { careers.Add(career.CareerName); }
+
+    string errorString = "";
+    
     if(IsPost)
     {
         string Name = Request["inputName"];
@@ -13,21 +19,98 @@
         string CellPhone = Request["inputCellPhone"];
         string Email = Request["inputEmail"];
         string Age = Request["inputAge"];
+        if (Age=="") { Age="0"; }
         string School = Request["inputSchool"];
         string CurrentGrade = Request["inputCurrentGrade"];
         string HSGraduationYear = Request["inputHSGraduationYear"];
+        if (HSGraduationYear=="") { HSGraduationYear="0"; }
         string HearAboutUs = Request["inputHearAboutUs"];
         bool BGCKingCoMemeber = false;
         if (Request["inputBGCKingCoMemeber"]=="on") { BGCKingCoMemeber = true; }
         string WhichClub = Request["selectWhichClub"];
-        var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12)"; 
-        /*Response.Write(Name);
-        Response.Write(Address);
-        Response.Write(CityStateZip);
-        Response.Write(SQLINSERT);
-        Response.Write("'"+WhichClub+"'");*/
-        db.Execute(SQLINSERT, Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub );
-        Response.Redirect("../Jobs/Jobs.cshtml");
+        
+        string CareerInterest = "";
+        for (int citor = 0; citor<careers.Count; citor++) {
+            if (Request["chkCareer_"+citor.ToString()] != null) {
+                CareerInterest += Request["chkCareer_"+citor.ToString()] + ", ";
+            }
+        }
+        if (CareerInterest.Length > 0) {
+            CareerInterest = CareerInterest.Substring(0, CareerInterest.Length-2);
+        }
+        
+        string WorkEligibility = Request["selectWorkEligibility"];
+        string PositionMatchGoals = Request["inputPositionMatchGoals"];
+        string WorkPlaceEmployment1 = Request["inputWorkPlaceEmployment1"];
+        string WorkPositionDuties1 = Request["inputWorkPositionDuties1"];
+        string WorkStartDate1 = Request["inputWorkStartDate1"];
+        string WorkEndDate1 = Request["inputWorkEndDate1"];
+        string WorkReasonLeave1 = Request["inputWorkReasonLeave1"];
+        string WorkSupervisor1 = Request["inputWorkSupervisor1"];
+        string WorkTelephone1 = Request["inputWorkTelephone1"];
+        
+        string WorkPlaceEmployment2 = Request["inputWorkPlaceEmployment2"];
+        string WorkPositionDuties2 = Request["inputWorkPositionDuties2"];
+        string WorkStartDate2 = Request["inputWorkStartDate2"];
+        string WorkEndDate2 = Request["inputWorkEndDate2"];
+        string WorkReasonLeave2 = Request["inputWorkReasonLeave2"];
+        string WorkSupervisor2 = Request["inputWorkSupervisor2"];
+        string WorkTelephone2 = Request["inputWorkTelephone2"];
+        
+        string VolunteerExperience = Request["inputVolunteerExperience"];
+        string InvolvedActivities = Request["inputInvolvedActivities"];
+        string ReadinessPrograms = Request["inputReadinessPrograms"];
+        
+        string c2YearCollege = Request["chkbox2YearCollege"];
+        if (c2YearCollege == "on") { c2YearCollege = "yes"; } else { c2YearCollege = "no"; }
+        string c4YearCollege = Request["chkbox4YearCollege"];
+        if (c4YearCollege == "on") { c4YearCollege = "yes"; } else { c4YearCollege = "no"; }
+        string TechnicalSchool = Request["chkboxTechnicalSchool"];
+        if (TechnicalSchool == "on") { TechnicalSchool = "yes"; } else { TechnicalSchool = "no"; }
+        
+        string OtherLanguages = Request["inputOtherLanguages"];
+        string SpecialSkills = Request["inputSpecialSkills"];
+        string ComputerSkills = Request["inputComputerSkills"];
+        
+        
+        
+        // validate the data first
+        if (Name == "") { errorString += " Please provide your Name."; }
+        if (Address == "") { errorString += " Please provide your Address."; }
+        if (CityStateZip == "") { errorString += " Please provide your City, State, and Zip."; }
+        if (HomePhone == "") { errorString += " Please provide your Home Phone."; }
+        if (CellPhone == "") { errorString += " Please provide your Cell Phone."; }
+        if (Email == "") { errorString += " Please provide your Email."; }
+        if (Age == "") { errorString += " Please provide your Age."; }
+        if (School == "") { errorString += " Please provide your School."; }
+        if (CurrentGrade == "") { errorString += " Please provide your Current Grade."; }
+        if (HSGraduationYear == "") { errorString += " Please provide your Graduation Year."; }
+        
+
+        
+        if (errorString.Length == 0) {
+            var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub" +
+                ", CareerInterest, WorkEligibility, PositionMatchGoals, WorkPlaceEmployment1, WorkPositionDuties1, WorkStartDate1, WorkEndDate1, WorkReasonLeave1, WorkSupervisor1, WorkTelephone1" +
+                ", WorkPlaceEmployment2, WorkPositionDuties2, WorkStartDate2, WorkEndDate2, WorkReasonLeave2, WorkSupervisor2, WorkTelephone2"+
+                ", VolunteerExperience, InvolvedActivities, ReadinessPrograms, c2YearCollege, c4YearCollege, TechnicalSchool, OtherLanguages, SpecialSkills, ComputerSkills )"+
+                " VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12"+
+                ", @13, @14, @15, @16, @17, @18, @19, @20, @21, @22"+
+                ", @23, @24, @25, @26, @27, @28, @29"+
+                ", @30, @31, @32, @33, @34, @35, @36, @37, @38)";
+            
+            /*Response.Write(Name);
+            Response.Write(Address);
+            Response.Write(CityStateZip);
+            Response.Write(SQLINSERT);
+            Response.Write("'"+WhichClub+"'");*/
+            
+            db.Execute(SQLINSERT, Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub, 
+            CareerInterest, WorkEligibility, PositionMatchGoals, WorkPlaceEmployment1, WorkPositionDuties1, WorkStartDate1, WorkEndDate1, WorkReasonLeave1, WorkSupervisor1, WorkTelephone1, 
+            WorkPlaceEmployment2, WorkPositionDuties2, WorkStartDate2, WorkEndDate2, WorkReasonLeave2, WorkSupervisor2, WorkTelephone2, 
+            VolunteerExperience, InvolvedActivities, ReadinessPrograms, c2YearCollege, c4YearCollege, TechnicalSchool, OtherLanguages, SpecialSkills, ComputerSkills);
+            
+            Response.Redirect("Completed.cshtml");
+        }
     }
     
     var selectClubs = "SELECT * FROM Clubs ORDER BY ClubName";
@@ -43,8 +126,8 @@
     Submit an application to Teen Jobs.
 </p>
 <form action="" method="post">
-    <p>
-        <table width="200px" class="formtable">
+    <p><div class="error">@errorString</div>
+        <table width="800px" class="formtable">
     <tr><td>Name</td><td><input type="text" name="inputName" class="forminput" /></td></tr>
     <tr><td>Address</td><td><input type="text" name="inputAddress" class="forminput" /></td></tr>
     <tr><td>City State Zip</td><td><input type="text" name="inputCityStateZip" class="forminput" /></td></tr>
@@ -57,79 +140,91 @@
     <tr><td>HS Graduation Year</td><td><input type="text" name="inputHSGraduationYear" class="forminput" /></td></tr>
     <tr><td width="180px">Are you currently a Boys &amp; Girls Club of King County Member?</td><td><input type="checkbox" name="inputBGCKingCoMemeber" /></td></tr>
     <!-- The "which clubs" field's visibility is dependent on  BGCKingCoMemeber input. --> 
-    <tr><td>Which Club</td><td><select name="selectWhichClub" class="forminput">
+    <tr><td>Which Club?</td><td><select name="selectWhichClub" class="forminput">
         @foreach(var club in clubdata)
         {
             <option value="@club.ClubId">@club.ClubName</option>
         }
     </select></td></tr>
     <!-- The following is meant to be a multiline textbox -->
-    <tr><td colspan="2">How did you hear about YouthForce?<br />
+    <tr><td colspan="2">How did you hear about Youth Force?<br />
         <textarea rows="6" cols="40" name="inputHearAboutUs" class="forminput"></textarea></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+            
+    <tr><td>Eligibility: Are you eligible to work in the United States?</td><td><select name="selectWorkEligibility" class="forminput">
+            <option value="">-- Select One --</option>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select></td></tr>
+    <tr><td colspan="2">You must have a US Passport / Certificate of US Citizenship / Naturalization or Birth Certificate or Social Security card, and Photo ID.<br /></td></tr>
     
-    <tr><td colspan="2"><input type="submit" value="Add Job" /></td></tr>
-        </table>
-    </p>
-</form>
-=======
-﻿﻿@{  
-    Layout = "~/_SiteLayout.cshtml";
-    Page.Title = "Apply for a Job at Teen Jobs";
-        var db = Database.Open("StarterSite"); 
-
-    if(IsPost)
-    {
-        string Name = Request["inputName"];
-        string Address = Request["inputAddress"];
-        string CityStateZip = Request["inputCityStateZip"];
-        var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip) VALUES (@0, @1, @2)"; 
-        Response.Write(Name);
-        Response.Write(Address);
-        Response.Write(CityStateZip);
-        Response.Write(SQLINSERT);
-        db.Execute(SQLINSERT, Name, Address, CityStateZip);
-        Response.Redirect("Jobs.cshtml");
-    }
+    <tr><td colspan="2">Describe how this position matches your career and education goals:<br />
+        <textarea rows="6" cols="40" name="inputPositionMatchGoals" class="forminput"></textarea></td></tr>
     
-    var selectClubs = "SELECT * FROM Clubs ORDER BY ClubName";
-    var clubdata = db.Query(selectClubs);
-
-
-    //var db = Database.Open("StarterSite");
-    //var sqlQ = "Select * FROM Jobs WHERE @JobTitle = " + JobTitle;
-    //var data = db.Query(sqlQ);
-    //
-}
-<p>
-    Submit an application to Teen Jobs.
-</p>
-<form action="" method="post">
-    <p>
-        <table width="200px" class="formtable">
-    <tr><td>Name</td><td><input type="text" name="inputName" class="forminput" /></td></tr>
-    <tr><td>Address</td><td><input type="text" name="inputAddress" class="forminput" /></td></tr>
-    <tr><td>City State Zip</td><td><input type="text" name="inputCityStateZip" class="forminput" /></td></tr>
-    <tr><td>Home Phone</td><td><input type="text" name="inputHomePhone" class="forminput" /></td></tr>
-    <tr><td>Cell Phone</td><td><input type="text" name="inputCellPhone" class="forminput" /></td></tr>
-    <tr><td>Email</td><td><input type="text" name="inputEmail" class="forminput" /></td></tr>
-    <tr><td>Age</td><td><input type="text" name="inputAge" class="forminput" /></td></tr>
-    <tr><td>School</td><td><input type="text" name="inputSchool" class="forminput" /></td></tr>
-    <tr><td>Current Grade</td><td><input type="text" name="inputCurrentGrade" class="forminput" /></td></tr>
-    <tr><td>HS Graduation Year</td><td><input type="text" name="inputHSGraduationYear" class="forminput" /></td></tr>
-    <tr><td width="180px">Are you currently a Boys &amp; Girls Club of King County Member?</td><td><input type="checkbox" name="inputBGCKingCoMemeber" /></td></tr>
-    <!-- The "which clubs" field's visibility is dependent on  BGCKingCoMemeber input. --> 
-    <tr><td>Which Club</td><td><select name="whichclub" class="forminput">
-        @foreach(var club in clubdata)
-        {
-            <option value="@club.ClubId">@club.ClubName</option>
+            <tr><td valign="top">*Future Career Interest:</td><td width="250px">
+                <table width="250px" cellspacing="5px">
+        @for (var i=0; (i*3) < @careers.Count; i++) {
+            <tr>
+            @for (var j=0; ((i*3+j) < @careers.Count && j<3); j++) {
+                string careerId = "chkCareer_" + (i+j).ToString();
+                <td valign="top" width="60px"><input type="checkbox" name="@careerId" value="@careers[i+j]" /> @careers[i+j]</td>
+            }
+            </tr>
         }
-    </select></td></tr>
-    <!-- The following is meant to be a multiline textbox -->
-    <tr><td colspan="2">How did you hear about YouthForce?<br />
-        <textarea rows="6" cols="40" name="inputHearAboutUs" class="forminput"></textarea></td></tr>
-    
-    <tr><td colspan="2"><input type="submit" value="Add Job" /></td></tr>
+                </table>
+            </td></tr>
+            
+            <tr><td colspan="2">
+                <b>Work/Internship Experience:</b><br/>
+                <table width="700px">
+                    <tr>
+                        <td>Place of Employment:<br/><input type="text" name="inputWorkPlaceEmployment1" class="forminput" /></td>
+                        <td>Position title/duties, skills:<br/><input type="text" name="inputWorkPositionDuties1" class="forminput" /></td>
+                        <td>Start date:<br/><input type="text" name="inputWorkStartDate1" class="forminput" /></td>
+                        <td>End date:<br/><input type="text" name="inputWorkEndDate1" class="forminput" /></td>
+                    </tr>
+                    <tr><td>Reason for leaving:</td><td colspan="3" align="left"><input type="text" name="inputWorkReasonLeave1" class="forminput" style="width:500px" /></td></tr>
+                    <tr>
+                        <td colspan="2">Supervisor: <input type="text" name="inputWorkSupervisor1" class="forminput" /></td>
+                        <td colspan="2">Telephone: <input type="text" name="inputWorkTelephone1" class="forminput" /></td>
+                    </tr>
+                    <tr><td colspan="4">&nbsp;</td></tr>
+                    <tr>
+                        <td>Place of Employment:<br/><input type="text" name="inputWorkPlaceEmployment2" class="forminput" /></td>
+                        <td>Position title/duties, skills:<br/><input type="text" name="inputWorkPositionDuties2" class="forminput" /></td>
+                        <td>Start date:<br/><input type="text" name="inputWorkStartDate2" class="forminput" /></td>
+                        <td>End date:<br/><input type="text" name="inputWorkEndDate2" class="forminput" /></td>
+                    </tr>
+                    <tr><td>Reason for leaving:</td><td colspan="3" align="left"><input type="text" name="inputWorkReasonLeave2" class="forminput" style="width:500px" /></td></tr>
+                    <tr>
+                        <td colspan="2">Supervisor: <input type="text" name="inputWorkSupervisor2" class="forminput" /></td>
+                        <td colspan="2">Telephone: <input type="text" name="inputWorkTelephone2" class="forminput" /></td>
+                    </tr>
+                    <tr><td colspan="4">&nbsp;</td></tr>
+                </table>
+            </td></tr>
+            
+    <tr><td colspan="2">Volunteer Experience: Please describe your current or previous volunteer experience:<br />
+        <textarea rows="6" cols="40" name="inputVolunteerExperience" class="forminput"></textarea></td></tr>
+    <tr><td>Please list any after school or weekend activities, clubs, or sports you are involved in:</td>
+        <td><input type="text" name="inputInvolvedActivities" class="forminput" style="width:400px" /></td></tr>
+    <tr><td>Please list the college and career readiness programs you are a part of:</td>
+        <td><input type="text" name="inputReadinessPrograms" class="forminput" style="width:400px" /></td></tr>
+
+    <tr><td width="180px">At this time, do you intend to go to college?</td>
+        <td><input type="checkbox" name="chkbox2YearCollege" /> 2 year<br />
+            <input type="checkbox" name="chkbox4YearCollege" /> 4 year<br />
+            <input type="checkbox" name="chkboxTechnicalSchool" /> Technical School
+        </td>
+    </tr>
+    <tr><td>Besides English, what other languages do you speak?</td>
+        <td><input type="text" name="inputOtherLanguages" class="forminput" style="width:400px" /></td></tr>
+    <tr><td>Please list qualifications such as special skills, abilities or honors that should be considered:</td>
+        <td><input type="text" name="inputSpecialSkills" class="forminput" style="width:400px" /></td></tr>
+    <tr><td>Computer skills:</td>
+        <td><input type="text" name="inputComputerSkills" class="forminput" style="width:400px" /></td></tr>
+
+            <tr><td></td><td><input type="submit" value="Add Job" /></td></tr>
         </table>
     </p>
 </form>
->>>>>>> 3145d13daba1b6d3b6094fb1ec4ca85925c9e261
