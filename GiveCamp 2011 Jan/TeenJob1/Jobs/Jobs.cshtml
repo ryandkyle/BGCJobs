@@ -13,7 +13,7 @@
     <ul>
         @foreach(var row in data)
         {
-            <li><a href="#">@row.JobTitle</a></li>
+            <li><a href="ViewJob.cshtml?id=@row.JobID">@row.JobTitle</a></li>
         }
     </ul>
     <a href="AddJob.cshtml">Add Job</a>
