@@ -268,6 +268,21 @@ input[type="text"].error-field, input[type="password"].error-field {
     font-size: 1.1em;
 }
 
-    .validation-error:before {
-        content: "»";
-    }
+.validation-error:before {
+    content: "»";
+}
+
+
+/* for About.cshtml  */
+#h4a {
+	color:#FFFFFF;
+	width:650px;
+	/*border:1px solid #282ED4;
+	background-color:#282ED4;*/
+	border:1px solid #d43329;
+	background-color:#d43329;
+	/*border:1px solid #d43329;
+	background-color:#d43329;*/
+	padding:5px 10px;
+	font-size:18px;
+}
