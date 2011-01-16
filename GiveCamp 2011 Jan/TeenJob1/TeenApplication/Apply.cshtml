@@ -8,13 +8,25 @@
         string Name = Request["inputName"];
         string Address = Request["inputAddress"];
         string CityStateZip = Request["inputCityStateZip"];
-        var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip) VALUES (@0, @1, @2)"; 
-        Response.Write(Name);
+        string HomePhone = Request["inputHomePhone"];
+        string CellPhone = Request["inputCellPhone"];
+        string Email = Request["inputEmail"];
+        string Age = Request["inputAge"];
+        string School = Request["inputSchool"];
+        string CurrentGrade = Request["inputCurrentGrade"];
+        string HSGraduationYear = Request["inputHSGraduationYear"];
+        string HearAboutUs = Request["inputHearAboutUs"];
+        bool BGCKingCoMemeber = false;
+        if (Request["inputBGCKingCoMemeber"]=="on") { BGCKingCoMemeber = true; }
+        string WhichClub = Request["selectWhichClub"];
+        var SQLINSERT = "INSERT INTO JobApplication (Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12)"; 
+        /*Response.Write(Name);
         Response.Write(Address);
         Response.Write(CityStateZip);
         Response.Write(SQLINSERT);
-        db.Execute(SQLINSERT, Name, Address, CityStateZip);
-        Response.Redirect("Jobs.cshtml");
+        Response.Write("'"+WhichClub+"'");*/
+        db.Execute(SQLINSERT, Name, Address, CityStateZip, HomePhone, CellPhone, Email, Age, School, CurrentGrade, HSGraduationYear, HearAboutUs, BGCKingCoMemeber, WhichClub );
+        Response.Redirect("../Jobs/Jobs.cshtml");
     }
     
     var selectClubs = "SELECT * FROM Clubs ORDER BY ClubName";
@@ -44,7 +56,7 @@
     <tr><td>HS Graduation Year</td><td><input type="text" name="inputHSGraduationYear" class="forminput" /></td></tr>
     <tr><td width="180px">Are you currently a Boys &amp; Girls Club of King County Member?</td><td><input type="checkbox" name="inputBGCKingCoMemeber" /></td></tr>
     <!-- The "which clubs" field's visibility is dependent on  BGCKingCoMemeber input. --> 
-    <tr><td>Which Club</td><td><select name="whichclub" class="forminput">
+    <tr><td>Which Club</td><td><select name="selectWhichClub" class="forminput">
         @foreach(var club in clubdata)
         {
             <option value="@club.ClubId">@club.ClubName</option>
