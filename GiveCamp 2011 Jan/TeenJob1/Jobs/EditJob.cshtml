@@ -2,7 +2,13 @@
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Welcome to Teen Jobs";
 
+// todo .. limit to admins only
+
         var id = Request["id"];
+        if(id == null)
+        {
+            Response.Redirect("Jobs.cshtml");
+        }
         var SQLSELECT = "SELECT JobTitle FROM Jobs where JobID=@0"; 
         var db = Database.Open("StarterSite");   
         var Jobs = db.QuerySingle(SQLSELECT,id);

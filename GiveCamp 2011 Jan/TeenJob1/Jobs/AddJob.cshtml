@@ -2,24 +2,39 @@
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Welcome to Teen Jobs";
 
+// todo... truncate strings to field length
+// todo... limit to just admins 
+// todo .. clean input to not allow html
+
     var JobTitle = "";
+    var successMessage = "";
+
     if(IsPost)
     {
         JobTitle = Request["formJobTitle"];
-        var SQLINSERT = "INSERT INTO Jobs (JobTitle) VALUES (@0)"; 
+        var JobDescription = Request["formJobDescription"];
+        var Tags = Request["formTags"];
+        var SQLINSERT = "INSERT INTO Jobs (JobTitle, JobDescription, Tags) VALUES (@0, @1, @2)";
         var db = Database.Open("StarterSite"); 
-        Response.Write(JobTitle);
-        Response.Write(SQLINSERT);
-        db.Execute(SQLINSERT, JobTitle);
-        Response.Redirect("Jobs.cshtml");
+        
+        var success = db.Execute(SQLINSERT, JobTitle, JobDescription, Tags);
+        if(success == 1)
+        {
+            successMessage = JobTitle + " added successfully.";
+        } else
+        {
+            successMessage = "Adding " + JobTitle + "failed be be added";
+        }
+        // Response.Redirect("Jobs.cshtml");
     }
-    
-    titleinput.alt="title input";
 }
 <p>
     Add a job to the database.
 </p>
 <form action="" method="post">
-    <p>Job Title: <input id="titleinput" type="text" name="formJobTitle" /></p>
+    <p>Job Title: <input type="text" name="formJobTitle" maxlength="100" style="width:50%;" /></p>
+    <p>Description: <textarea name="formJobDescription" rows="6" maxlength="2500" style="width:60%;"></textarea></p>
+    <p>Tags: <input type="text" name="formTags" maxlength="500" style="width:50%;"  /></p>
     <p><input type="submit" value="Add Job" /></p>
+    <p>@successMessage</p>
 </form>

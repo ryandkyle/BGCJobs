@@ -161,13 +161,13 @@
     <tr><td colspan="2">Describe how this position matches your career and education goals:<br />
         <textarea rows="6" cols="40" name="inputPositionMatchGoals" class="forminput"></textarea></td></tr>
     
-            <tr><td valign="top">*Future Career Interest:</td><td width="250px">
-                <table width="250px" cellspacing="5px">
+            <tr><td valign="top">*Future Career Interest:</td><td width="400px">
+                <table width="400px" cellspacing="5px">
         @for (var i=0; (i*3) < @careers.Count; i++) {
             <tr>
             @for (var j=0; ((i*3+j) < @careers.Count && j<3); j++) {
                 string careerId = "chkCareer_" + (i+j).ToString();
-                <td valign="top" width="60px"><input type="checkbox" name="@careerId" value="@careers[i+j]" /> @careers[i+j]</td>
+                <td valign="top" width="200px"><input type="checkbox" name="@careerId" value="@careers[i+j]" /> @careers[i+j]</td>
             }
             </tr>
         }
